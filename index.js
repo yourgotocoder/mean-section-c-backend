@@ -1,34 +1,23 @@
-const parser = require('simple-excel-to-json')
-const doc = parser.parseXls2Json('./Example.xlsx')[0]; 
-const json2xls = require("json2xls")
-const fs = require("fs");
+const express = require("express");
+const { copyFileSync } = require("fs");
+const server = express();
+const memesList = require("./memeResource")
 
-const totalCgpa = doc.reduce((prevValue, currentValue) => {
-    prevValue += currentValue.CGPA
-    return prevValue
-}, 0)
-
-const averageCgpa = totalCgpa / doc.length;
-
-// A+ = 9.5, A = 9 and above, B = 8.5 and above, C = 8.5 or below
-
-const gradedDocument = doc.map((student) => {
-    if (student.CGPA >= 9.5) {
-        student.GRADE = "A+"
-    } else if (student.CGPA < 9.5 && student.CGPA >= 9) {
-        student.GRADE = "A"
-    } else if (student.CGPA < 9) {
-        student.GRADE = "B"
-    }
-    return student;
+server.get("/meme", (req, res) => {
+    const list = [...memesList];
+    const randomIndex = Math.floor(Math.random() * list.length)
+    res.send(`<img src="${list[randomIndex]}"/>`)
 });
 
-const filteredDocument = gradedDocument.filter(student => student.CGPA > 8);
+server.get("/meme/:id", (req, res) => {
+    const { id } = req.params;
+    const list = [...memesList];
+    // console.log(params)
+    res.send(`<img src="${list[id]}"/>`)
+})
 
-gradedDocument.push({CGPA: averageCgpa, NAME: "Average Grades"})
+server.get("/", (request, response) => {
+    response.send("<h1>Hello World!!!</h1>")
+})
 
-const excelDocument = json2xls(gradedDocument);
-
-fs.writeFileSync("Grades.xlsx", excelDocument, "binary")
-
-console.log(filteredDocument)
+server.listen(3000, () => console.log("Sever started on port 3000"));
