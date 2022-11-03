@@ -1,0 +1,30 @@
+
+### A post request to the backend. 
+POST http://localhost:3000/add-todo
+Content-Type: application/json
+
+{
+    "title": "My second item"
+}
+
+### Send a get request to the todo-items route defined in the server
+GET http://localhost:3000/todo-items
+
+### Send a patch request to the todo-items for a specific document using patch
+### Provide an identifier for the specific document and provide the new value that will replace a particular key
+### The identifier can be anything that can uniquely indetify the document. 
+PATCH http://localhost:3000/edit-todo
+Content-Type: application/json
+
+{
+    "id": "6360a9bc3f59b704e1dc15bc",
+    "newTodoTitle": "Modified item" 
+}
+
+### Send a delete request with the identifier for the document. 
+DELETE  http://localhost:3000/delete-todo
+Content-Type: application/json
+
+{
+    "id": "6360a9bc3f59b704e1dc15bc"
+}
